@@ -1,1 +1,1 @@
-A project similar to stream videos
+A project to stream videos
