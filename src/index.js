@@ -22,6 +22,7 @@ dotenv.config({ path: "./env" });
 //   }
 // })();
 
+
 connectDb()
   .then(() => {
     app.listen(process.env.PORT, () => {
