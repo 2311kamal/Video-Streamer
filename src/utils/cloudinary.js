@@ -18,7 +18,8 @@ const uploadOnCloudinary = async (lacalFilePath) => {
       resource_type: "auto",
     });
     // console.log("hello2");
-    console.log("File uploaded on cloudinary/n", response.url);
+    // console.log("File uploaded on cloudinary/n", response.url);
+    fs.unlinkSync(lacalFilePath);
     return response;
   } catch (error) {
     fs.unlinkSync(lacalFilePath);
