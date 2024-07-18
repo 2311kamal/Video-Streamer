@@ -6,12 +6,12 @@ import { apiResponse } from "../utils/apiResponse.js";
 
 const generateTokens = async (userId) => {
   try {
-    console.log("check 1");
+    // console.log("check 1");
     const user = await User.findById(userId);
-    console.log("check 2");
-    console.log("\n", user, "/n");
+    // console.log("check 2");
+    // console.log("\n", user, "/n");
     const accesstoken = user.generateAccessToken();
-    console.log("check 3");
+    // console.log("check 3");
     const refreshtoken = user.generateRefreshsToken();
     user.refreshtoken = refreshtoken;
     user.accesstoken = accesstoken;
@@ -115,13 +115,14 @@ const loginUser = asyncHandler(async (req, res) => {
   //access and refresh token
   //send cookie
 
-  const { email, username, password } = req.body;
-  if (!username && !email) {
+  const { email, userName, password } = req.body;
+  if (!userName && !email) {
     throw new apiError(400, "username/email is required");
   }
   const user = await User.findOne({
-    $or: [{ username }, { email }],
+    $or: [{ userName }, { email }],
   });
+  // console.log(user);
   if (!user) {
     throw new apiError(404, "user dont exist");
   }
@@ -146,7 +147,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .json(
       new apiResponse(
         200,
-        { user: loggedInUser, accesstoken, refreshtoken },
+        { user: user, accesstoken, refreshtoken },
         "User logged In Successfully"
       )
     ); //loggedInUser
@@ -155,8 +156,9 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   // const user = req.user;
 
+  // console.log("check 1 User details: ",req.user);
   await User.findByIdAndUpdate(
-    req.User._id,
+    req.user._id,
     {
       $set: {
         refreshToken: undefined,

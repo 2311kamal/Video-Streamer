@@ -3,18 +3,19 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-
-
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   try {
+    // console.log("Checking req in auth.mideleware.js: ", req);
     const accessToken =
       req.cookies?.accessToken ||
-      req.header("Authorization")?.replace("Bearer ", "");
+      req.header("authorization")?.replace("Bearer ", "");
+    // console.log(accessToken);
     if (!accessToken) {
       throw new apiError(401, "Unauthorized request");
     }
-
-    const decodedToken = jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
+    
+    const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    // console.log(decodedToken);
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"
     );
