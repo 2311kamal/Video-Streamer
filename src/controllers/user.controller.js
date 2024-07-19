@@ -17,6 +17,7 @@ const generateAccRefToken = async (userId) => {
     user.refreshtoken = refreshtoken;
     user.accesstoken = accesstoken;
     await user.save({ validateBeforeSave: false });
+    // console.log(accesstoken, refreshtoken);
     return { accesstoken, refreshtoken };
   } catch {
     throw new apiError(
@@ -40,11 +41,6 @@ const registerUser = asyncHandler(async (req, res) => {
   //return res
 
   const { fullName, email, userName, password } = req.body;
-  // console.log(email);
-
-  // if (fullName == "") {
-  //   throw new apiError(400, "fullname is required");
-  // }
 
   if (
     [fullName, email, userName, password].some((field) => {
@@ -56,23 +52,23 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const exisitinguser = await User.findOne({
     $or: [{ userName }, { email }],
-    if(exisitinguser) {
-      throw new apiError(409, "User already exist");
-    },
   });
+  if (exisitinguser) {
+    throw new apiError(409, "User already exist");
+  }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  // const coverLocalPath = req.files?.coverImage[0]?.path;
-  // console.log("Here is the avatar Local Path: ", avatarLocalPath);
   if (!avatarLocalPath) {
     throw new apiError(400, "Avatar file required");
   }
+
+  //const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
   let coverImageLocalPath;
   if (
     req.files &&
     Array.isArray(req.files.coverImage) &&
-    req.files.coverImage.lengrh > 0
+    req.files.coverImage.length > 0
   ) {
     coverImageLocalPath = req.files.coverImage[0].path;
   }
@@ -92,12 +88,10 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     userName: userName.toLowerCase(),
   });
-  // console.log(password);
-  // console.log("check1");
+
   const createdUser = await User.findById(user._id).select(
     "-passeord -refreshToken"
   );
-  // console.log("check2");
 
   if (!createdUser) {
     throw new apiError(500, "Something went wrong while registering user");
@@ -177,6 +171,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const refrehAccessToken = asyncHandler(async (req, res) => {
+  console.log(req);
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToken) {
