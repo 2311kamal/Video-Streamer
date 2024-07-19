@@ -11,18 +11,18 @@ const generateAccRefToken = async (userId) => {
     const user = await User.findById(userId);
     // console.log("check 2");
     // console.log("\n", user, "/n");
-    const accesstoken = user.generateAccessToken();
+    const accessToken = user.generateAccessToken();
     // console.log("check 3");
-    const refreshtoken = user.generateRefreshsToken();
-    user.refreshtoken = refreshtoken;
-    user.accesstoken = accesstoken;
+    const refreshToken = user.generateRefreshsToken();
+    user.refreshToken = refreshToken;
+    user.accessToken = accessToken;
     await user.save({ validateBeforeSave: false });
-    // console.log(accesstoken, refreshtoken);
-    return { accesstoken, refreshtoken };
+    // console.log(accessToken, refreshToken);
+    return { accessToken, refreshToken };
   } catch {
     throw new apiError(
       500,
-      "Something went wrong while generating refresh and access token"
+      "Something went wrong while generating refresh and access Token"
     );
   }
 };
@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
   //check for images, avatar
   //upload them to cloudunary, check avatar again
   //ctreate user object - create entry in db
-  //remove passeord and refreh token dirld from respnse
+  //remove passeord and refreh Token dirld from respnse
   //check for user creation
   //return res
 
@@ -107,7 +107,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //username or email
   //find the user
   //check password
-  //access and refresh token
+  //access and refresh Token
   //send cookie
 
   const { email, userName, password } = req.body;
@@ -127,7 +127,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(404, "Invalid Credentials");
   }
 
-  const { accesstoken, refreshtoken } = await generateAccRefToken(user._id);
+  const { accessToken, refreshToken } = await generateAccRefToken(user._id);
 
   const loggedInUser = await User.findById(user._id).select(
     "-password -refreshToken"
@@ -137,12 +137,12 @@ const loginUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .cookie("accessToken", accesstoken, options)
-    .cookie("refreshToken", refreshtoken, options)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
     .json(
       new apiResponse(
         200,
-        { user: user, accesstoken, refreshtoken },
+        { user: user, accessToken, refreshToken },
         "User logged In Successfully"
       )
     ); //loggedInUser
@@ -171,7 +171,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const refrehAccessToken = asyncHandler(async (req, res) => {
-  console.log(req);
+  // console.log(req);
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToken) {
@@ -184,18 +184,20 @@ const refrehAccessToken = asyncHandler(async (req, res) => {
     );
     const user = await User.findById(decodedToken?._id);
     if (!user) {
-      throw new apiError(401, "Invalid rfresh token");
+      throw new apiError(401, "Invalid rfresh Token");
     }
-    if (user?.refreshToken === incomingRefreshToken) {
-      throw new apiError(401, "refresh token is expired or used");
+    if (!user?.refreshToken === incomingRefreshToken) {
+      throw new apiError(401, "refresh Token is expired or used");
     }
     const options = {
       httpOnly: true,
       secure: true,
     };
-    const { accessToken, newRefreshToken } = await generateAccRefToken(
+    const { accessToken,  refreshToken: newRefreshToken  } = await generateAccRefToken(
       user._id
     );
+        // console.log(accessToken, refreshToken);
+
     return res
       .status(200)
       .cookie("accessToken", accessToken)
@@ -203,12 +205,12 @@ const refrehAccessToken = asyncHandler(async (req, res) => {
       .json(
         new apiResponse(
           200,
-          { accessToken, refreshToken: newRefreshToken },
-          "Access token refreshed"
+          { accessToken, newRefreshToken },
+          "Access Token refreshed"
         )
       );
   } catch (error) {
-    throw new apiError(401, error?.message || "Invalid refresh token");
+    throw new apiError(401, error?.message || "Invalid refresh Token");
   }
 });
 
