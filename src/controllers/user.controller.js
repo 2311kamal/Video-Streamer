@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateAccRefToken = async (userId) => {
   try {
@@ -295,6 +296,54 @@ const updateUsercoverImage = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, user, "Cover Image updated successfully"));
 });
 
+const getWathHistory = asyncHandler(async (req, res) => {
+  const user = await User.aggregate([
+    {
+      $match: {
+        //_id:req.user._id   // This wont work as pipelines are passed as it is to mongoDb mongoose don't interfare here so it wont convert id to the object id that is created by mongodb autobatically.
+        _id: new mongoose.Types.ObjectId(req.user.id),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localFieldd: "watchHistory",
+        foreignField: "_id",
+        as: "watchHistory",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
+                {
+                  $project: {
+                    userName: 1,
+                    fullName: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  return res
+    .status(200)
+    .json(new apiResponse(200, user[0].watchHistory, "watchHistory fetched"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -305,4 +354,5 @@ export {
   updateAccountDetail,
   updateUserAvatar,
   updateUsercoverImage,
+  getWathHistory,
 };
