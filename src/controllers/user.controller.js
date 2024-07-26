@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { delFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
 const generateAccRefToken = async (userId) => {
   try {
@@ -158,12 +159,12 @@ const logoutUser = asyncHandler(async (req, res) => {
   );
   const options = {
     httpOnly: true,
-    // secure: true, // ;uncomment this if using https (during production), localhost runs on http 
+    // secure: true, // ;uncomment this if using https (during production), localhost runs on http
   };
   return res
     .status(200)
     .clearCookie("accessToken", options)
-    .clearCookie("refreshToken",options)
+    .clearCookie("refreshToken", options)
     .json(new apiResponse(200, {}, "User LoggedOut"));
 });
 
@@ -225,7 +226,7 @@ const changePassword = asyncHandler(async (req, res) => {
 const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
-    .json(200, req.user, "current user fetched successfully");
+    .json(new apiResponse(200, req.user, "User fetched succfully"));
 });
 
 const updateAccountDetail = asyncHandler(async (req, res) => {
@@ -234,8 +235,8 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
     throw new apiError(400, "All fields are required");
   }
 
-  const user = User.findByIdAndUpdate(
-    req.User?._id,
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
     {
       $set: { fullName, email },
     },
@@ -243,7 +244,28 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
   ).select("-password");
   return res
     .status(200)
-    .json(new apiError(200, user, "Account details updated "));
+    .json(new apiResponse(200, user, "Account details updated "));
+});
+
+const updateUsercoverImage = asyncHandler(async (req, res) => {
+  const coverImagelocalpath = req.file?.path;
+  if (!coverImagelocalpath) {
+    throw new apiError(400, "coverImage file is missing");
+  }
+  const coverImage = await uploadOnCloudinary(coverImagelocalpath);
+  if (!coverImage.url) {
+    throw new apiError(400, "Error while uploading coverImage");
+  }
+  delFromCloudinary(req?.user.coverImage);
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    { $set: { coverImage: coverImage.url } },
+    { new: true }
+  ).select("-password");
+  return res
+    .status(200)
+    .json(new apiResponse(200, user, "Cover Image updated successfully"));
 });
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
@@ -263,25 +285,6 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new apiResponse(200, user, "Avatar updated successfully"));
-});
-
-const updateUsercoverImage = asyncHandler(async (req, res) => {
-  const coverImagelocalpath = req.file?.path;
-  if (!coverImagelocalpath) {
-    throw new apiError(400, "coverImage file is missing");
-  }
-  const coverImage = await uploadOnCloudinary(coverImagelocalpath);
-  if (!coverImage.url) {
-    throw new apiError(400, "Error while uploading coverImage");
-  }
-  const user = await User.findByIdAndUpdate(
-    req.user?._id,
-    { $set: { coverImage: coverImage.url } },
-    { new: true }
-  ).select("-password");
-  return res
-    .status(200)
-    .json(new apiResponse(200, user, "Cover Image updated successfully"));
 });
 
 const getUserChannerProfile = asyncHandler(async (req, ues) => {
