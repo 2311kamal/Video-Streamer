@@ -8,17 +8,12 @@ import mongoose from "mongoose";
 
 const generateAccRefToken = async (userId) => {
   try {
-    // console.log("check 1");
     const user = await User.findById(userId);
-    // console.log("check 2");
-    // console.log("\n", user, "/n");
     const accessToken = user.generateAccessToken();
-    // console.log("check 3");
     const refreshToken = user.generateRefreshsToken();
     user.refreshToken = refreshToken;
     user.accessToken = accessToken;
     await user.save({ validateBeforeSave: false });
-    // console.log(accessToken, refreshToken);
     return { accessToken, refreshToken };
   } catch {
     throw new apiError(
@@ -76,7 +71,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-  // console.log(avatar);
   if (!avatar) {
     throw new apiError(409, "Avatar is required 111");
   }
@@ -97,7 +91,6 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!createdUser) {
     throw new apiError(500, "Something went wrong while registering user");
   }
-  // console.log("check3");
   return res
     .status(201)
     .json(new apiResponse(200), createdUser, "User registered successfully");
@@ -118,7 +111,6 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({
     $or: [{ userName }, { email }],
   });
-  // console.log(user);
   if (!user) {
     throw new apiError(404, "user dont exist");
   }
@@ -153,14 +145,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  // const user = req.user;
-
-  // console.log("check 1 User details: ",req.user);
   await User.findByIdAndUpdate(
     req.user._id,
     {
-      $set: {
-        refreshToken: undefined,
+      $unset: {
+        refreshToken: 1,
       },
     },
     {
@@ -169,16 +158,16 @@ const logoutUser = asyncHandler(async (req, res) => {
   );
   const options = {
     httpOnly: true,
-    // secure: true,
+    // secure: true, // ;uncomment this if using https (during production), localhost runs on http 
   };
   return res
     .status(200)
     .clearCookie("accessToken", options)
+    .clearCookie("refreshToken",options)
     .json(new apiResponse(200, {}, "User LoggedOut"));
 });
 
 const refrehAccessToken = asyncHandler(async (req, res) => {
-  // console.log(req);
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
   if (!incomingRefreshToken) {
@@ -202,7 +191,6 @@ const refrehAccessToken = asyncHandler(async (req, res) => {
     };
     const { accessToken, refreshToken: newRefreshToken } =
       await generateAccRefToken(user._id);
-    // console.log(accessToken, refreshToken);
 
     return res
       .status(200)
