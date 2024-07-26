@@ -277,6 +277,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   if (!avatar.url) {
     throw new apiError(400, "Error while uploading avatar");
   }
+  delFromCloudinary(req?.user.avatar);
+
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     { $set: { avatar: avatar.url } },
