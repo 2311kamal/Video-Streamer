@@ -289,11 +289,12 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, user, "Avatar updated successfully"));
 });
 
-const getUserChannerProfile = asyncHandler(async (req, ues) => {
+const getUserChannelProfile = asyncHandler(async (req, res) => {
   const { username } = req.params;
   if (!username.trim()) {
     throw new apiError(400, "UserName is missing");
   }
+  // console.log(username);
   const channel = await User.aggregate([
     {
       $match: {
@@ -301,10 +302,12 @@ const getUserChannerProfile = asyncHandler(async (req, ues) => {
       },
     },
     {
-      from: "subscriptions",
-      localField: "-id",
-      foreignField: "channel",
-      as: "subscribers",
+      $lookup: {
+        from: "subscriptions",
+        localField: "_id",
+        foreignField: "channel",
+        as: "subscribers",
+      },
     },
     {
       $lookup: {
@@ -324,9 +327,14 @@ const getUserChannerProfile = asyncHandler(async (req, ues) => {
         },
         isSubscribed: {
           $cond: {
-            if: { $in: [req.use?._id, "$subscribers.subscriber"] },
+            if: {
+              $in: [
+                new mongoose.Types.ObjectId(req?.user._id),
+                "$subscribers.subscriber",
+              ],
+            },
             then: true,
-            else: fasle,
+            else: false,
           },
         },
       },
@@ -344,14 +352,15 @@ const getUserChannerProfile = asyncHandler(async (req, ues) => {
       },
     },
   ]);
+  // console.log(channel);
   if (!channel?.length) {
-    throw new ApiError(404, "channel does not exists");
+    throw new apiError(404, {}, "channel does not exists");
   }
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, channel[0], "User channel fetched successfully")
+      new apiResponse(200, channel[0], "User channel fetched successfully")
     );
 });
 
@@ -366,7 +375,7 @@ const getWathHistory = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "videos",
-        localFieldd: "watchHistory",
+        localField: "watchHistory",
         foreignField: "_id",
         as: "watchHistory",
         pipeline: [
@@ -413,6 +422,6 @@ export {
   updateAccountDetail,
   updateUserAvatar,
   updateUsercoverImage,
-  getUserChannerProfile,
+  getUserChannelProfile,
   getWathHistory,
 };
