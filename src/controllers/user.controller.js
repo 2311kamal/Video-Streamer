@@ -329,7 +329,8 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
           $cond: {
             if: {
               $in: [
-                new mongoose.Types.ObjectId(req?.user._id),
+                // new mongoose.Types.ObjectId(req?.user._id), //depricated
+                req?.user._id,
                 "$subscribers.subscriber",
               ],
             },
@@ -368,8 +369,8 @@ const getWathHistory = asyncHandler(async (req, res) => {
   const user = await User.aggregate([
     {
       $match: {
-        //_id:req.user._id   // This wont work as pipelines are passed as it is to mongoDb mongoose don't interfare here so it wont convert id to the object id that is created by mongodb autobatically.
-        _id: new mongoose.Types.ObjectId(req.user.id),
+        // _id: new mongoose.Types.ObjectId(req.user.id), // now deprecated
+        _id:req.user._id   // This did not work earlier as pipelines are passed as it is to mongoDb mongoose don't interfare here so it wont convert id to the object id that is created by mongodb autobatically.
       },
     },
     {
@@ -407,6 +408,7 @@ const getWathHistory = asyncHandler(async (req, res) => {
       },
     },
   ]);
+  // console.log(user);
   return res
     .status(200)
     .json(new apiResponse(200, user[0].watchHistory, "watchHistory fetched"));
