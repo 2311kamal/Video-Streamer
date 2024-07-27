@@ -2,29 +2,25 @@ import mongoose, { Schema } from "mongoose";
 
 const playlistSchema = new Schema(
   {
-
-
-
-
     comment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "comment",
+      ref: "Comment",
     },
     video: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "video",
+      ref: "Video",
     },
     tweet: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "tweet",
+      ref: "Tweet",
     },
 
     likedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   },
   { timestamps: true }
 );
 
-export const playlist = mongoose.model("playlit", playlistSchema);
+export const playlist = mongoose.model("Playlit", playlistSchema);

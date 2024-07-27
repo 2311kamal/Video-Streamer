@@ -17,15 +17,15 @@ const playlistSchema = new Schema(
     videos: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "video",
+        ref: "Video",
       },
     ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
     },
   },
   { timestamps: true }
 );
 
-export const playlist = mongoose.model("playlist", playlistSchema);
+export const playlist = mongoose.model("Playlist", playlistSchema);
