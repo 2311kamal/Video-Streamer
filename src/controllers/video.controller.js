@@ -128,6 +128,11 @@ const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: update video details like title, description, thumbnail
   const { title, description } = req.body;
+  const owner = req.user;
+  const existingVideo = await Video.findOne({ title, owner });
+  if (existingVideo) {
+    throw new apiError(402, "A video with the same title already exist");
+  }
   if (!title || !description) {
     throw new apiError(400, "Title and description are required");
   }
