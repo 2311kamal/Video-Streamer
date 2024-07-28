@@ -7,9 +7,59 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
+  //   console.log(req);
+  const {
+    page = 1,
+    limit = 10,
+    query,
+    sortBy,
+    sortType,
+    userName,
+    fullName,
+  } = req.query;
   //TODO: get all videos based on query, sort, pagination
 
+  const skip = (page - 1) * limit;
+  const sortOrder = sortType === "asc" ? 1 : -1;
+  let filters = {};
+  if (query) {
+    filters = {
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ],
+    };
+  }
+
+  const owner =
+    (await User.findOne({ $or: [{ userName }, { fullName }] }))?._id || "";
+  if (owner) {
+    filters.owner = owner;
+  }
+  try {
+    const videos = await Video.find(filters)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const totalVideos = await Video.countDocuments(filters);
+
+    res.status(200).json(
+      new apiResponse(
+        200,
+        {
+          page,
+          limit,
+          totalVideos,
+          totalPages: Math.ceil(totalVideos / limit),
+          videos,
+        },
+        "All videos fetched"
+      )
+    );
+  } catch (error) {
+    res.status(500).json(new apiError(500, error.message));
+  }
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {

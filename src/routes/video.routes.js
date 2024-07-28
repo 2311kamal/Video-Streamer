@@ -26,6 +26,7 @@ videoRouter.route("/").post(
     },
   ]),
   publishAVideo
-);
+)
+.get(getAllVideos);
 
 export default videoRouter;
