@@ -5,6 +5,7 @@ import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { delFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   //   console.log(req);
@@ -115,17 +116,44 @@ const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: get video by id
   const video = await Video.findById(videoId);
-  console.log(videoId);
+  // console.log(videoId);
   if (!video) {
     throw new apiError(404, "Video not found");
   }
-  console.log(video);
+  // console.log(video);
   return res.status(200).json(new apiResponse(200, { video }, "Video Fetched"));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: update video details like title, description, thumbnail
+  const { title, description } = req.body;
+  if (!title || !description) {
+    throw new apiError(400, "Title and description are required");
+  }
+  const thumbnailLocalPath = req.files?.thumbnail[0]?.path;
+  if (!thumbnailLocalPath) {
+    throw new apiError(400, "thumbnail required");
+  }
+
+  const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+  if (!thumbnail) {
+    throw new apiError(501, "new thumbnail upload on cloudinary failed");
+  }
+  const video = await Video.findById(videoId);
+  // console.log(video.thumbnail);
+  delFromCloudinary(video.thumbnail);
+  video.title = title;
+  video.description = description;
+  video.thumbnail = thumbnail.url;
+  // console.log(video.thumbnail, "\n", thumbnail);
+  await video.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(
+      new apiResponse(200, video, "Video details are updated successfully")
+    );
 });
 
 const deleteVideo = asyncHandler(async (req, res) => {

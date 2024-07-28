@@ -30,5 +30,16 @@ videoRouter
     publishAVideo
   )
   .get(getAllVideos);
-videoRouter.route("/:videoId").get(getVideoById);
+videoRouter
+  .route("/:videoId")
+  .get(getVideoById)
+  .patch(
+    upload.fields([
+      {
+        name: "thumbnail",
+        maxCount: 1,
+      },
+    ]),
+    updateVideo
+  );
 export default videoRouter;

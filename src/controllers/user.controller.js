@@ -4,7 +4,6 @@ import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
 import { delFromCloudinary } from "../utils/deleteFromCloudinary.js";
 
 const generateAccRefToken = async (userId) => {
@@ -249,6 +248,8 @@ const updateAccountDetail = asyncHandler(async (req, res) => {
 
 const updateUsercoverImage = asyncHandler(async (req, res) => {
   const coverImagelocalpath = req.file?.path;
+  // console.log(req.file);
+
   if (!coverImagelocalpath) {
     throw new apiError(400, "coverImage file is missing");
   }
@@ -256,7 +257,7 @@ const updateUsercoverImage = asyncHandler(async (req, res) => {
   if (!coverImage.url) {
     throw new apiError(400, "Error while uploading coverImage");
   }
-  delFromCloudinary(req?.user.coverImage);
+  await delFromCloudinary(req?.user.coverImage);
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -277,7 +278,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   if (!avatar.url) {
     throw new apiError(400, "Error while uploading avatar");
   }
-  delFromCloudinary(req?.user.avatar);
+  await delFromCloudinary(req?.user.avatar);
 
   const user = await User.findByIdAndUpdate(
     req.user?._id,
@@ -370,7 +371,7 @@ const getWathHistory = asyncHandler(async (req, res) => {
     {
       $match: {
         // _id: new mongoose.Types.ObjectId(req.user.id), // now deprecated
-        _id:req.user._id   // This did not work earlier as pipelines are passed as it is to mongoDb mongoose don't interfare here so it wont convert id to the object id that is created by mongodb autobatically.
+        _id: req.user._id, // This did not work earlier as pipelines are passed as it is to mongoDb mongoose don't interfare here so it wont convert id to the object id that is created by mongodb autobatically.
       },
     },
     {
