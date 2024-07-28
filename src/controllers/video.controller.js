@@ -63,14 +63,19 @@ const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
+  // console.log(req);
   const { title, description } = req.body;
+  // console.log(title);
   // TODO: get video, upload to cloudinary, create video
   //   console.log(req.files);
   if (!title || !description) {
     throw new apiError(400, "All fields are required");
   }
-
   const owner = req.user;
+  const existingVideo = await Video.findOne({ title, owner });
+  if (existingVideo) {
+    throw new apiError(402, "A video with the same title already exist");
+  }
   const videoLocalPath = req.files?.videoFile[0]?.path;
   if (!videoLocalPath) {
     throw new apiError(400, "Video file required");
@@ -89,7 +94,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
     throw new apiError(501, "thumbnail upload on cloudinary failed");
   }
   const duration = videoFile.duration;
-
   const video = await Video.create({
     title,
     description,
@@ -98,6 +102,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     owner,
     duration,
   });
+  // console.log("\n\nError is here\n\n")
   if (!video) {
     throw new apiError(500, "something went wrong while publishing video");
   }
@@ -109,6 +114,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: get video by id
+  const video = await Video.findById(videoId);
+  console.log(videoId);
+  if (!video) {
+    throw new apiError(404, "Video not found");
+  }
+  console.log(video);
+  return res.status(200).json(new apiResponse(200, { video }, "Video Fetched"));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {

@@ -14,19 +14,21 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const videoRouter = Router();
 videoRouter.use(verifyJWT);
 
-videoRouter.route("/").post(
-  upload.fields([
-    {
-      name: "videoFile",
-      maxCount: 1,
-    },
-    {
-      name: "thumbnail",
-      maxCount: 1,
-    },
-  ]),
-  publishAVideo
-)
-.get(getAllVideos);
-
+videoRouter
+  .route("/")
+  .post(
+    upload.fields([
+      {
+        name: "videoFile",
+        maxCount: 1,
+      },
+      {
+        name: "thumbnail",
+        maxCount: 1,
+      },
+    ]),
+    publishAVideo
+  )
+  .get(getAllVideos);
+videoRouter.route("/:videoId").get(getVideoById);
 export default videoRouter;
