@@ -9,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View Credentials' below to copy your API secret
 });
 
-const delFromCloudinary = async (fileUrl) => {
+const delFromCloudinary = async (fileUrl,resource='image') => {
   try {
     if (fileUrl === "") {
       return;
@@ -17,10 +17,10 @@ const delFromCloudinary = async (fileUrl) => {
     const id = public_id(fileUrl);
     if (!id)
       return new apiError(500, {}, "There is no public_id to delete the file");
-    // console.log("id of old coverImage:", id);
-    const response = await cloudinary.uploader.destroy(id);
+    // console.log("\nid of old coverImage:", id);
+    const response = await cloudinary.uploader.destroy(id, {resource_type: resource});
     // console.log(
-    //   "\n\nHere is the response after deleting the old cover\n",
+    //   "\nHere is the response after deleting the old cover\n",
     //   response
     // );
     return response;

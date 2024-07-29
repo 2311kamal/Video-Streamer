@@ -41,5 +41,6 @@ videoRouter
       },
     ]),
     updateVideo
-  );
+  )
+  .delete(deleteVideo);
 export default videoRouter;

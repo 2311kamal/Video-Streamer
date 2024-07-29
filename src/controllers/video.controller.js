@@ -72,7 +72,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
   if (!title || !description) {
     throw new apiError(400, "All fields are required");
   }
-  const owner = req.user;
+  const owner = req.user._id;
   const existingVideo = await Video.findOne({ title, owner });
   if (existingVideo) {
     throw new apiError(402, "A video with the same title already exist");
@@ -146,8 +146,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     throw new apiError(501, "new thumbnail upload on cloudinary failed");
   }
   const video = await Video.findById(videoId);
-  // console.log(video.thumbnail);
-  delFromCloudinary(video.thumbnail);
+  await delFromCloudinary(video.thumbnail);
   video.title = title;
   video.description = description;
   video.thumbnail = thumbnail.url;
@@ -164,6 +163,17 @@ const updateVideo = asyncHandler(async (req, res) => {
 const deleteVideo = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
   //TODO: delete video
+  const video = await Video.findById(videoId);
+  // console.log(video);
+  if (!video) {
+    throw new apiError(400, "video does not exixt");
+  }
+  await delFromCloudinary(video.videoFile, "video");
+  await delFromCloudinary(video.thumbnail);
+  const result = await Video.deleteOne({ _id: videoId });
+  return res
+    .status(200)
+    .json(new apiResponse(200, { result }, "Video deleted"));
 });
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
