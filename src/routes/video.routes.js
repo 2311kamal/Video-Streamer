@@ -43,4 +43,5 @@ videoRouter
     updateVideo
   )
   .delete(deleteVideo);
+videoRouter.route("/toggle/:videoId").post(togglePublishStatus);
 export default videoRouter;
