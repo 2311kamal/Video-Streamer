@@ -17,11 +17,12 @@ app.use(express.static("public"));
 app.use(cookierParser());
 
 import userRouter from "./routes/user.routes.js";
-app.use("/api/v1/users",userRouter)
+app.use("/api/v1/users", userRouter);
 
 import videoRouter from "./routes/video.routes.js";
-app.use("/api/v1/videos",videoRouter)
+app.use("/api/v1/videos", videoRouter);
 
-
+import playlistRouter from "./routes/playlist.routes.js";
+app.use("/api/v1/playlits", playlistRouter);
 
 export { app };
