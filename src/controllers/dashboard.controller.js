@@ -6,32 +6,22 @@ import { Like } from "../models/like.model.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { response } from "express";
 
 const getChannelStats = asyncHandler(async (req, res) => {
   // TODO: Get the channel stats like total video views, total subscribers, total videos, total likes etc.
-  const { channelId } = req.params;
-  const user = await User.findById(channelId);
-  if (!user) {
-    throw new apiError(404, "channel doesn't exist");
-  }
 
-  try {
-    const channel = await User.aggregate([
-      {
-        $match: {
-          _id: channelId,
-        },
+  const result = await Video.aggregate([
+    {
+      $match: {
+        owner: req.user._id,
       },
-      {
-        $lookup: {
-          from: "videos",
-          localField: "_id",
-          foreignField: "owner",
-          as: "userVideos",
-        },
-      },
-    ]);
-  } catch (error) {}
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(new apiResponse(200, result, "Stats fetched successfully"));
 });
 
 const getChannelVideos = asyncHandler(async (req, res) => {
