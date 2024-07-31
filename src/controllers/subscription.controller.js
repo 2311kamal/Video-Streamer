@@ -50,11 +50,114 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 // controller to return subscriber list of a channel
 const getUserChannelSubscribers = asyncHandler(async (req, res) => {
   const { channelId } = req.params;
-  const subscribers = Subscription.aggregate([
+  if (!channelId) {
+    throw new apiError(403, "Not a valid channel");
+  }
+  const subscribersList = await Subscription.aggregate([
     {
-      $match: channelId,
+      $match: {
+        channel: mongoose.Types.ObjectId.createFromHexString(channelId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "subscriber",
+        foreignField: "_id",
+        as: "subscribers",
+        pipeline: [
+          {
+            $project: {
+              _id: 0,
+              userName: 1,
+              fullName: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+
+    {
+      $addFields: {
+        userName: { $first: "$subscribers.userName" },
+        fullName: { $first: "$subscribers.fullName" },
+        avatar: { $first: "$subscribers.avatar" },
+      },
+    },
+    {
+      $project: {
+        subscriber: 0,
+        channel: 0,
+        _id: 0,
+        subscribers: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      },
     },
   ]);
+  // const subscribersList = await Subscription.aggregate([
+  //   {
+  //     $match: {
+  //       channel: mongoose.Types.ObjectId.createFromHexString(channelId),
+  //     },
+  //   },
+  //   {
+  //     $lookup: {
+  //       from: "users",
+  //       localField: "subscriber",
+  //       foreignField: "_id",
+  //       as: "subscribers",
+  //       pipeline: [
+  //         {
+  //           $project: {
+  //             _id: 0,
+  //             userName: 1,
+  //             fullName: 1,
+  //             avatar: 1,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       channel: 0,
+  //       _id: 0,
+  //       subscriber: 0,
+  //       createdAt: 0,
+  //       updatedAt: 0,
+  //     },
+  //   },
+  //   {
+  //     $addFields: {
+  //       subscribers: {
+  //         $first: "$subscribers",
+  //       },
+  //     },
+  //   },
+  //   {
+  //     $addFields: {
+  //       userName: "$subscribers.userName",
+  //       fullName: "$subscribers.fullName",
+  //       avatar: "$subscribers.avatar",
+  //     },
+  //   },
+  //   {
+  //     $project: {
+  //       subscribers: 0,
+  //     },
+  //   },
+  // ]);
+  return res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        { subscribersList, subscribersCount: subscribersList.length },
+        "ok"
+      )
+    );
 });
 
 // controller to return channel list to which user has subscribed
