@@ -15,14 +15,14 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
   const isLiked = await Like.findOne({ video: videoId, likedBy: req.user._id });
   let response;
   try {
-      response = isLiked
+    response = isLiked
       ? await Like.deleteOne({ video: videoId, likedBy: req.user._id })
       : await Like.create({ video: videoId, likedBy: req.user._id });
-    } catch (error) {
-        console.log("toggleVideoLike :: ", error);
-        throw new apiError(500, error?.message || "Internal server Error");
-    }
-    // console.log(response);
+  } catch (error) {
+    console.log("toggleVideoLike :: ", error);
+    throw new apiError(500, error?.message || "Internal server Error");
+  }
+  // console.log(response);
   return res.status(200).json(
     new apiResponse(
       200,
@@ -39,6 +39,36 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 const toggleCommentLike = asyncHandler(async (req, res) => {
   const { commentId } = req.params;
   //TODO: toggle like on comment
+
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    throw new apiError(404, "Comment does not exist");
+  }
+  const isLiked = await Like.findOne({
+    comment: commentId,
+    likedBy: req.user._id,
+  });
+  let response;
+  try {
+    response = isLiked
+      ? await Like.deleteOne({ comment: commentId, likedBy: req.user._id })
+      : await Like.create({ comment: commentId, likedBy: req.user._id });
+  } catch (error) {
+    console.log("toggleCommentLike :: ", error);
+    throw new apiError(500, error?.message || "Internal server Error");
+  }
+  // console.log(response);
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {
+        response,
+        likedBy: req.user.userName,
+        comment: comment.content,
+      },
+      isLiked === null ? "Liked the Comment " : "undo Like"
+    )
+  );
 });
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
