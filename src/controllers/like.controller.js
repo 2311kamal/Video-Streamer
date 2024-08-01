@@ -72,8 +72,41 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 });
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
+
+
   const { tweetId } = req.params;
   //TODO: toggle like on tweet
+
+  const tweet = await Comment.findById(tweetId);
+  if (!tweet) {
+    throw new apiError(404, "Comment does not exist");
+  }
+  const isLiked = await Like.findOne({
+    tweet: tweetId,
+    likedBy: req.user._id,
+  });
+  let response;
+  try {
+    response = isLiked
+      ? await Like.deleteOne({ tweet: tweetId, likedBy: req.user._id })
+      : await Like.create({ tweet: tweetId, likedBy: req.user._id });
+  } catch (error) {
+    console.log("toggleCommentLike :: ", error);
+    throw new apiError(500, error?.message || "Internal server Error");
+  }
+  // console.log(response);
+  return res.status(200).json(
+    new apiResponse(
+      200,
+      {
+        response,
+        likedBy: req.user.userName,
+        tweet: tweet.content,
+      },
+      isLiked === null ? "Liked the Comment " : "undo Like"
+    )
+  );
+
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
