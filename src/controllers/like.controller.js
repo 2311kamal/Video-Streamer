@@ -4,6 +4,7 @@ import { Video } from "../models/video.model.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import videoRouter from "../routes/video.routes.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -72,8 +73,6 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 });
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
-
-
   const { tweetId } = req.params;
   //TODO: toggle like on tweet
 
@@ -106,11 +105,76 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
       isLiked === null ? "Liked the Comment " : "undo Like"
     )
   );
-
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
   //TODO: get all liked videos
+  const user = req.user;
+  if (!user) {
+    throw new apiError(403, "Bad user request");
+  }
+  const videos = await Like.aggregate([
+    {
+      $match: { likedBy: user._id },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "video",
+        foreignField: "_id",
+        as: "likedVideo",
+        pipeline: [
+          {
+            $project: {
+              _id: 0,
+              owner: 1,
+              title: 1,
+            },
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "videoOwner",
+            },
+          },
+          {
+            $addFields: {
+              owner: { $first: "$videoOwner.userName" },
+            },
+          },
+          {
+            $project: {
+              videoOwner: 0,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        title: { $first: "$likedVideo.title" },
+        channelUserName: { $first: "$likedVideo.owner" },
+        likedByuserName: req.user.userName,
+      },
+    },
+    {
+      $project: {
+        likedVideo: 0,
+      },
+    },
+  ]);
+
+  return res
+    .status(200)
+    .json(
+      new apiResponse(
+        200,
+        { videos, likes: videos.length },
+        "Liked videos fetched"
+      )
+    );
 });
 
 export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
