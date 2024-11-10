@@ -1,64 +1,140 @@
-import React, { useState } from 'react';
-import { FiHome, FiTrendingUp, FiPlay, FiBookmark, FiSettings, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import React from 'react';
+import { FiHome, FiTrendingUp, FiBookmark, FiSettings, FiStar } from 'react-icons/fi';
+import { FaYoutube, FaHistory, FaRegClock } from 'react-icons/fa';
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
+const Sidebar = ({ isOpen }) => {
   return (
-    <div className="flex">
-      {/* Sidebar Drawer */}
-      <div
-        className={`fixed top-0 left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300 ${
-          isOpen ? 'w-64' : 'w-20'
-        }`}
-      >
-        {/* Sidebar Toggle Button */}
-        <button
-          onClick={toggleSidebar}
-          className="absolute -right-3 top-4 bg-gray-800 text-white p-1 rounded-full focus:outline-none"
+    <div
+      className={`fixed top-16 left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300 ${
+        isOpen ? 'w-64' : 'w-20'
+      }`}
+    >
+      {/* Logo Section */}
+      <div className="flex justify-center items-center pt-6 pb-6">
+        <FaYoutube size={32} className="text-red-600" />
+        {isOpen && <span className="ml-2 text-xl font-bold">MyTube</span>}
+      </div>
+
+      {/* Navigation Links */}
+      <nav className="flex flex-col items-start space-y-8 ml-4">
+        {/* Home Link */}
+        <a
+          href="/"
+          className="flex items-center text-gray-300 hover:text-white space-x-4"
         >
-          {isOpen ? <FiChevronLeft size={20} /> : <FiChevronRight size={20} />}
-        </button>
+          <FiHome size={24} />
+          {isOpen && (
+            <span className="ml-4 transition-opacity duration-300">Home</span>
+          )}
+        </a>
 
-        {/* Logo (Visible only when open) */}
-        {isOpen && <div className="text-white text-2xl font-bold py-4 px-4">MyTube</div>}
+        {/* Trending Link */}
+        <a
+          href="/trending"
+          className="flex items-center text-gray-300 hover:text-white space-x-4"
+        >
+          <FiTrendingUp size={24} />
+          {isOpen && (
+            <span className="ml-4 transition-opacity duration-300">Trending</span>
+          )}
+        </a>
 
-        {/* Navigation Links */}
-        <nav className="flex flex-col items-center space-y-4 mt-8">
-          <a href="/" className="flex items-center text-gray-300 hover:text-white">
-            <FiHome size={24} />
-            {isOpen && <span className="ml-4">Home</span>}
-          </a>
-          <a href="/trending" className="flex items-center text-gray-300 hover:text-white">
-            <FiTrendingUp size={24} />
-            {isOpen && <span className="ml-4">Trending</span>}
-          </a>
-          <a href="/subscriptions" className="flex items-center text-gray-300 hover:text-white">
-            <FiPlay size={24} />
-            {isOpen && <span className="ml-4">Subscriptions</span>}
-          </a>
-          <a href="/library" className="flex items-center text-gray-300 hover:text-white">
-            <FiBookmark size={24} />
-            {isOpen && <span className="ml-4">Library</span>}
-          </a>
-          <a href="/settings" className="flex items-center text-gray-300 hover:text-white">
-            <FiSettings size={24} />
-            {isOpen && <span className="ml-4">Settings</span>}
-          </a>
-        </nav>
-      </div>
+        {/* Library Link */}
+        <a
+          href="/library"
+          className="flex items-center text-gray-300 hover:text-white space-x-4"
+        >
+          <FiBookmark size={24} />
+          {isOpen && (
+            <span className="ml-4 transition-opacity duration-300">Library</span>
+          )}
+        </a>
 
-      {/* Main Content */}
-      <div className={`flex-1 ${isOpen ? 'ml-64' : 'ml-20'} transition-all duration-300`}>
-        <div className="p-8">
-          {/* Add your main content here */}
-          <h1 className="text-3xl font-bold">Welcome to MyTube!</h1>
-        </div>
-      </div>
+        {/* Settings Link */}
+        <a
+          href="/settings"
+          className="flex items-center text-gray-300 hover:text-white space-x-4"
+        >
+          <FiSettings size={24} />
+          {isOpen && (
+            <span className="ml-4 transition-opacity duration-300">Settings</span>
+          )}
+        </a>
+
+        {/* You Section (Visible only when expanded) */}
+        {isOpen && (
+          <div className="mt-6 space-y-6">
+            <div className="text-sm text-gray-500">You</div>
+            <a
+              href="/history"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FaHistory size={24} />
+              <span className="ml-4 transition-opacity duration-300">History</span>
+            </a>
+            <a
+              href="/your-videos"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FaRegClock size={24} />
+              <span className="ml-4 transition-opacity duration-300">Your Videos</span>
+            </a>
+            <a
+              href="/playlist"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">Playlist</span>
+            </a>
+            <a
+              href="/watch-later"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FaRegClock size={24} />
+              <span className="ml-4 transition-opacity duration-300">Watch Later</span>
+            </a>
+          </div>
+        )}
+
+        {/* Subtle Line Between Sections */}
+        {isOpen && <div className="border-t border-gray-600 my-4"></div>}
+
+        {/* Subscriptions Section (Visible only when expanded) */}
+        {isOpen && (
+          <div className="mt-6 space-y-6">
+            <div className="text-sm text-gray-500">Subscriptions</div>
+            {/* Example Subscriptions */}
+            <a
+              href="/subscription-1"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">Subscription 1</span>
+            </a>
+            <a
+              href="/subscription-2"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">Subscription 2</span>
+            </a>
+            <a
+              href="/subscription-3"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">Subscription 3</span>
+            </a>
+            <a
+              href="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">Subscription 4</span>
+            </a>
+          </div>
+        )}
+      </nav>
     </div>
   );
 };

@@ -130,7 +130,7 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     // secure: true,
   };
-
+    
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
