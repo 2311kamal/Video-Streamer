@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* Dark Theme */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #121212; /* Dark background */
+  color: #e0e0e0; /* Light text color */
+  font-family: 'Arial', sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+button {
+  background-color: #333333;
+  color: #e0e0e0;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+}
+
+input::placeholder,
+button:hover {
+  color: #aaaaaa;
+}
+
+/* Navbar & Sidebar */
+.bg-gray-900 {
+  background-color: #1e1e1e; /* Darker gray for navbar */
+}
+
+.bg-gray-800 {
+  background-color: #2c2c2c; /* Slightly lighter gray */
+}
+
+.text-gray-300 {
+  color: #b3b3b3; /* Light gray text for icons and labels */
+}
+
+.text-white {
+  color: white;
+}
+
+.hover\:text-white:hover {
+  color: white;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Add custom styles for other components */
