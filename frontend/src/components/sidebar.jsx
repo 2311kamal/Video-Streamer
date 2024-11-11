@@ -1,12 +1,18 @@
-import React from 'react';
-import { FiHome, FiTrendingUp, FiBookmark, FiSettings, FiStar } from 'react-icons/fi';
-import { FaYoutube, FaHistory, FaRegClock } from 'react-icons/fa';
+import React from "react";
+import {
+  FiHome,
+  FiTrendingUp,
+  FiBookmark,
+  FiSettings,
+  FiStar,
+} from "react-icons/fi";
+import { FaYoutube, FaHistory, FaRegClock } from "react-icons/fa";
 
 const Sidebar = ({ isOpen }) => {
   return (
     <div
       className={`fixed top-16 left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300 ${
-        isOpen ? 'w-64' : 'w-20'
+        isOpen ? "w-48 " : "w-20"
       }`}
     >
       {/* Logo Section */}
@@ -16,15 +22,22 @@ const Sidebar = ({ isOpen }) => {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col items-start space-y-8 ml-4">
+      <nav className="flex flex-col items-start space-y-8 ml-4 ">
+
+
+
+
+
+        <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
+          
         {/* Home Link */}
-        <a
+          <a
           href="/"
           className="flex items-center text-gray-300 hover:text-white space-x-4"
         >
           <FiHome size={24} />
           {isOpen && (
-            <span className="ml-4 transition-opacity duration-300">Home</span>
+            <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">Home</span>
           )}
         </a>
 
@@ -35,7 +48,9 @@ const Sidebar = ({ isOpen }) => {
         >
           <FiTrendingUp size={24} />
           {isOpen && (
-            <span className="ml-4 transition-opacity duration-300">Trending</span>
+            <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+              Trending
+            </span>
           )}
         </a>
 
@@ -46,7 +61,9 @@ const Sidebar = ({ isOpen }) => {
         >
           <FiBookmark size={24} />
           {isOpen && (
-            <span className="ml-4 transition-opacity duration-300">Library</span>
+            <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+              Library
+            </span>
           )}
         </a>
 
@@ -57,80 +74,101 @@ const Sidebar = ({ isOpen }) => {
         >
           <FiSettings size={24} />
           {isOpen && (
-            <span className="ml-4 transition-opacity duration-300">Settings</span>
+            <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+              Settings
+            </span>
           )}
         </a>
+        
+        
+        </div>
+
+
+
 
         {/* You Section (Visible only when expanded) */}
         {isOpen && (
-          <div className="mt-6 space-y-6">
+          <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
             <div className="text-sm text-gray-500">You</div>
             <a
               href="/history"
               className="flex items-center text-gray-300 hover:text-white space-x-4"
             >
               <FaHistory size={24} />
-              <span className="ml-4 transition-opacity duration-300">History</span>
+              <span className="ml-4 transition-opacity duration-300 overflow-hidden max-w-[10rem] animate-slide-left-to-right">
+                History
+              </span>
             </a>
             <a
               href="/your-videos"
               className="flex items-center text-gray-300 hover:text-white space-x-4"
             >
               <FaRegClock size={24} />
-              <span className="ml-4 transition-opacity duration-300">Your Videos</span>
+              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                Your Videos
+              </span>
             </a>
             <a
               href="/playlist"
               className="flex items-center text-gray-300 hover:text-white space-x-4"
             >
               <FiStar size={24} />
-              <span className="ml-4 transition-opacity duration-300">Playlist</span>
+              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                Playlist
+              </span>
             </a>
             <a
               href="/watch-later"
               className="flex items-center text-gray-300 hover:text-white space-x-4"
             >
               <FaRegClock size={24} />
-              <span className="ml-4 transition-opacity duration-300">Watch Later</span>
+              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                Watch Later
+              </span>
             </a>
           </div>
         )}
 
-        {/* Subtle Line Between Sections */}
-        {isOpen && <div className="border-t border-gray-600 my-4"></div>}
-
         {/* Subscriptions Section (Visible only when expanded) */}
         {isOpen && (
-          <div className="mt-6 space-y-6">
+          <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
             <div className="text-sm text-gray-500">Subscriptions</div>
             {/* Example Subscriptions */}
             <a
               href="/subscription-1"
-              className="flex items-center text-gray-300 hover:text-white space-x-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
             >
               <FiStar size={24} />
-              <span className="ml-4 transition-opacity duration-300">Subscription 1</span>
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 1
+              </span>
             </a>
             <a
               href="/subscription-2"
-              className="flex items-center text-gray-300 hover:text-white space-x-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
             >
               <FiStar size={24} />
-              <span className="ml-4 transition-opacity duration-300">Subscription 2</span>
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 2
+              </span>
             </a>
             <a
               href="/subscription-3"
-              className="flex items-center text-gray-300 hover:text-white space-x-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
             >
               <FiStar size={24} />
-              <span className="ml-4 transition-opacity duration-300">Subscription 3</span>
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 3
+              </span>
             </a>
             <a
               href="/subscription-4"
-              className="flex items-center text-gray-300 hover:text-white space-x-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
             >
               <FiStar size={24} />
-              <span className="ml-4 transition-opacity duration-300">Subscription 4</span>
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 4
+              </span>
             </a>
           </div>
         )}
