@@ -1,6 +1,7 @@
-import React from 'react';
-import { FiMenu, FiSearch } from 'react-icons/fi';
-import { FaRegUserCircle } from 'react-icons/fa';
+import React from "react";
+import { Link } from "react-router-dom";
+import { FiMenu, FiSearch } from "react-icons/fi";
+import { FaRegUserCircle, FaYoutube } from "react-icons/fa";
 
 const Navbar = ({ toggleSidebar }) => {
   return (
@@ -10,8 +11,11 @@ const Navbar = ({ toggleSidebar }) => {
         <FiMenu />
       </button>
 
-      {/* Platform Name */}
-      <div className="text-2xl font-bold">MyTube</div>
+      {/* Logo Section */}
+      <div className="flex justify-center items-center">
+        <FaYoutube size={32} className="text-red-600" />
+        <span className="ml-2 text-xl font-bold">MyTube</span>
+      </div>
 
       {/* Search Bar */}
       <div className="flex items-center space-x-2 bg-gray-800 p-2 rounded-md w-1/3">
@@ -25,14 +29,14 @@ const Navbar = ({ toggleSidebar }) => {
         </button>
       </div>
 
-      {/* Profile Section (Clickable, as an anchor) */}
-      <a
-        href="/profile"
+      {/* Profile Section (Clickable, using Link) */}
+      <Link
+        to="/profile"
         className="flex items-center space-x-2 cursor-pointer hover:text-gray-300"
       >
         <FaRegUserCircle size={30} />
         <span className="hidden sm:block">Profile</span>
-      </a>
+      </Link>
     </div>
   );
 };
