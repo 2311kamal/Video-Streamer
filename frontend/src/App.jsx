@@ -16,14 +16,7 @@ const App = () => {
         <Navbar toggleSidebar={toggleSidebar} />
         <div className="flex">
           <Sidebar isOpen={isSidebarOpen} />
-          <div
-            className={`flex-1 p-8 transition-all duration-300 ${
-              isSidebarOpen ? "ml-48" : "ml-20"
-            }`}
-          >
-            {/* Main Content Goes Here */}
-            <h1 className="text-3xl font-bold">Welcome to MyTube!</h1>
-          </div>
+
         </div>
       </div>
     </Router>
