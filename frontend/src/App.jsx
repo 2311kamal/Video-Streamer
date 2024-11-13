@@ -1,26 +1,13 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Navbar from "./components/navbar";
-import Sidebar from "./components/sidebar";
+import React from "react";
+import {
+  Routes,
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
+import HomePage from "./pages/homePage";
+import Layout from "./components/layout";
 
-const App = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
 
-  return (
-    <Router>
-      <div className="flex flex-col">
-        <Navbar toggleSidebar={toggleSidebar} />
-        <div className="flex">
-          <Sidebar isOpen={isSidebarOpen} />
-
-        </div>
-      </div>
-    </Router>
-  );
-};
-
-export default App;
+export default router;

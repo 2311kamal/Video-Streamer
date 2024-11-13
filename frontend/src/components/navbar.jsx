@@ -5,20 +5,15 @@ import { FaRegUserCircle, FaYoutube } from "react-icons/fa";
 
 const Navbar = ({ toggleSidebar }) => {
   return (
-    <div className="flex items-center justify-between bg-gray-900 text-white p-4 fixed w-full top-0 left-0 z-20">
-      {/* Drawer Toggle Button */}
-      <button onClick={toggleSidebar} className="text-2xl">
-        <FiMenu />
-      </button>
-
-      {/* Logo Section */}
+    <div className="flex items-center justify-between bg-gray-900 text-white p-4 fixed w-full top-0 left-0 z-10">
       <div className="flex justify-center items-center">
-        <FaYoutube size={32} className="text-red-600" />
+        <button onClick={toggleSidebar} className="text-2xl">
+          <FiMenu />
+        </button>
+        <FaYoutube size={32} className="text-red-600 ml-4" />
         <span className="ml-2 text-xl font-bold">MyTube</span>
       </div>
-
-      {/* Search Bar */}
-      <div className="flex items-center space-x-2 bg-gray-800 p-2 rounded-md w-1/3">
+      <div className="flex items-center space-x-2 bg-gray-800 rounded-md w-1/3">
         <input
           type="text"
           placeholder="Search..."
@@ -28,12 +23,7 @@ const Navbar = ({ toggleSidebar }) => {
           <FiSearch size={20} />
         </button>
       </div>
-
-      {/* Profile Section (Clickable, using Link) */}
-      <Link
-        to="/profile"
-        className="flex items-center space-x-2 cursor-pointer hover:text-gray-300"
-      >
+      <Link to="/profile" className="flex items-center space-x-2 cursor-pointer hover:text-gray-300">
         <FaRegUserCircle size={30} />
         <span className="hidden sm:block">Profile</span>
       </Link>

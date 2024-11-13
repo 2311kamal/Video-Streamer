@@ -12,7 +12,7 @@ import {  FaHistory, FaRegClock } from "react-icons/fa";
 const Sidebar = ({ isOpen }) => {
   return (
     <div
-      className={`fixed top-16 left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300 mt-4 ${
+      className={`fixed top-[72px] left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300  ${
         isOpen ? "w-48 " : "w-20"
       }`}
     >
