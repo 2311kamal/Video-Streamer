@@ -11,34 +11,17 @@ function Layout() {
   };
 
   return (
-    // <div className="h-screen w-full overflow-hidden">
-    //   {/* Navbar outside the flex container to stay on top */}
-    //   <Navbar toggleSidebar={toggleSidebar} />
-
-    //   <div className="flex  ">
-    //     {/* Sidebar placed within the flex container */}
-    //     <Sidebar isOpen={isSidebarOpen} />
-
-    //     {/* Main content area takes the remaining space */}
-    //     <div
-    //       className={`flex-1 p-4 mt-16 ${isSidebarOpen ? "ml-48" : "ml-20"}`}
-    //     >
-    //       <Outlet />
-    //     </div>
-    //   </div>
-    // </div>
-
-    <>
+    <div className="h-full flex flex-col">
       <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={isSidebarOpen} />
-      <div
-        className={`  h-full w-full fixed top-[72px] ${
-          isSidebarOpen ? "left-[192px]" : "left-[80px]"
-        } transition-all duration-300`}
+      <main
+        className={`flex-1 overflow-y-auto transition-all duration-300 ${
+          isSidebarOpen ? "ml-[192px]" : "ml-[80px]"
+        } mt-[72px] scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-mybg`}
       >
         <Outlet />
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
 

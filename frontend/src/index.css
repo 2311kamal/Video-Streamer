@@ -4,15 +4,18 @@
 
 
 
-/* Dark Theme */
 * {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
 }
 
 body {
-  background-color: #646464; /* Dark background */
+  background-color: #121212; /* Dark background */
   color: #e0e0e0; /* Light text color */
   font-family: 'Arial', sans-serif;
 }
@@ -42,7 +45,7 @@ button:hover {
 }
 
 .bg-gray-800 {
-  background-color: #2c2c2c; /* Slightly lighter gray */
+  background-color: #121212; /* Slightly lighter gray */
 }
 
 .text-gray-300 {
