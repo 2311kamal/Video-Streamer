@@ -3,11 +3,11 @@ import Thumbnail from "./Thumbnail";
 import { Link } from "react-router-dom";
 import { FiChevronRight, FiChevronLeft } from "react-icons/fi"; // Importing icons
 
-function VideoSlide({ Name }) {
+function VideoSlide({ Name, Card = Thumbnail, count, cardProps = {} }) {
   const containerRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [maxScroll, setMaxScroll] = useState(0); // Track the maximum scroll position
-  const scrollAmount = 300; // The amount of scroll per click
+  const scrollAmount = 600; // The amount of scroll per click
 
   // Handle scroll for both directions (left and right)
   const handleScroll = (direction) => {
@@ -26,7 +26,10 @@ function VideoSlide({ Name }) {
   return (
     <div className="flex flex-col w-[90%] relative">
       <div className="flex justify-between my-2">
-        <div className="text-2xl ml-16 font-bold">{Name}</div>
+        <div className="text-2xl ml-16 font-bold">
+          {Name} {count ? "• " : ""}
+          <span className="text-lg font-normal">{count || ""}</span>
+        </div>
         <Link className="mr-2">
           <button className="rounded-3xl text-gray-300 hover:text-white">
             View All
@@ -39,29 +42,13 @@ function VideoSlide({ Name }) {
         <div className="flex gap-4 pb-2 overflow-hidden" ref={containerRef}>
           <div className="flex gap-4 transition-transform duration-300 ease-in-out">
             {/* Thumbnails */}
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
+
+            <Card {...cardProps} />
+            <Card {...cardProps} />
+            <Card {...cardProps} />
+            <Card {...cardProps} />
+            <Card {...cardProps} />
+            <Card {...cardProps} />
           </div>
         </div>
 

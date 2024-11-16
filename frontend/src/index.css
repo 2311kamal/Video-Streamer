@@ -64,6 +64,8 @@ button {
   cursor: pointer;
 }
 
-
+h2, p {
+  font-weight: 500;
+}
 
 /* Add custom styles for other components */

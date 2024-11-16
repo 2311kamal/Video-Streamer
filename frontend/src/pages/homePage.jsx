@@ -1,7 +1,7 @@
 import React from "react";
 import Thumbnail from "../components/Thumbnail"; // Assuming this is the component for the thumbnails
 
-function HomePage() {
+function HomePage({ card = <Thumbnail /> }) {
   return (
     <div className="flex flex-wrap justify-center ab:justify-between ab:px-24 lg:px-2 pt-4 ">
       <Thumbnail
