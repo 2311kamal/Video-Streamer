@@ -20,6 +20,10 @@ module.exports = {
       // => @media (min-width: 1536px) { ... }
     },
     extend: {
+      clipPath: {
+        trapezium: "polygon(0 0, 100% 0, 100% 100%, 0 90%)", // Customize the trapezium shape
+      },
+
       keyframes: {
         "slide-left-to-right": {
           "0%": { transform: "translateX(-100%)", opacity: "0" },
@@ -42,6 +46,10 @@ module.exports = {
       },
       colors: {
         mybg: "#121212",
+      },
+      backgroundImage: {
+        myRedGradient:
+          "linear-gradient( 107.2deg,  rgba(50,15,15,1) 20%, rgba(112,0,0,1) 90% )",
       },
     },
   },

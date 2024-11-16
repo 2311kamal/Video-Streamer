@@ -10,13 +10,17 @@
   box-sizing: border-box;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
 body {
-  background-color: #121212; /* Dark background */
-  color: #e0e0e0; /* Light text color */
+  background-color: #121212;
+  /* Dark background */
+  color: #e0e0e0;
+  /* Light text color */
   font-family: 'Arial', sans-serif;
 }
 
@@ -41,15 +45,18 @@ button:hover {
 
 /* Navbar & Sidebar */
 .bg-gray-900 {
-  background-color: #1e1e1e; /* Darker gray for navbar */
+  background-color: #1e1e1e;
+  /* Darker gray for navbar */
 }
 
 .bg-gray-800 {
-  background-color: #121212; /* Slightly lighter gray */
+  background-color: #121212;
+  /* Slightly lighter gray */
 }
 
 .text-gray-300 {
-  color: #b3b3b3; /* Light gray text for icons and labels */
+  color: #b3b3b3;
+  /* Light gray text for icons and labels */
 }
 
 .text-white {
@@ -64,8 +71,31 @@ button {
   cursor: pointer;
 }
 
-h2, p {
+h2,
+p {
   font-weight: 500;
 }
 
 /* Add custom styles for other components */
+
+
+@layer utilities {
+
+  .trapezium {
+
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 100%);
+
+  }
+
+  .trapezium2 {
+    clip-path: polygon(0 0, 100% 0, 50% 100%, 0% 100%);
+
+  }
+
+  .rectangle {
+
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+
+  }
+
+}
