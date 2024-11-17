@@ -1,26 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Components from "../styles/loginCss.jsx";
+import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 function Login() {
   const [signIn, toggle] = useState(true);
+  const [type, setType] = useState("email");
+  const [data, setData] = useState({ userName: "", email: "", password: "" });
+
+  const handleClick = () => {
+    setType(type === "email" ? "text" : "email");
+  };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
+
+  const handleSignIn = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/login",
+        data
+      );
+      console.log(res.data.message);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+
   return (
     <Components.Container>
       <Components.SignUpContainer signingIn={signIn}>
         <Components.Form>
           <Components.Title>Create Account</Components.Title>
-          <Components.Input type="text" placeholder="Name" />
-          <Components.Input  placeholder="Email" />
-          <Components.Input type="password" placeholder="Password" />
-          <Components.Button>Sign Up</Components.Button>
+          <Components.Input
+            onChange={handleChange}
+            type="text"
+            placeholder="Username"
+            name="userName"
+          />
+          <Components.Input
+            onChange={handleChange}
+            type="email"
+            placeholder="Email"
+            name="email"
+          />
+          <Components.Input
+            onChange={handleChange}
+            type="password"
+            placeholder="Password"
+            name="password"
+          />
+          <Components.Button type="button" onClick={handleSignUp}>
+            Sign Up
+          </Components.Button>
         </Components.Form>
       </Components.SignUpContainer>
       <Components.SignInContainer signingIn={signIn}>
         <Components.Form>
-          <Components.Title>Sign in</Components.Title>
-          <Components.Input  placeholder="Email" />
-          <Components.Input type="password" placeholder="Password" />
+          <Components.Title>Login</Components.Title>
+          <Components.Input
+            onChange={handleChange}
+            type={type}
+            placeholder={type === "text" ? "Username" : "Email"}
+            name={type === "text" ? "userName" : "email"}
+          />
+          <Components.Button type="button" onClick={handleClick}>
+            {type !== "email" ? "Use Email" : "Use Username"}
+          </Components.Button>
+          <Components.Input
+            onChange={handleChange}
+            type="password"
+            placeholder="Password"
+            name="password"
+          />
           <Components.Anchor href="#">Forgot your password?</Components.Anchor>
-          <Components.Button>Sign In</Components.Button>
+          <Components.Button type="button" onClick={handleSignIn}>
+            Sign In
+          </Components.Button>
         </Components.Form>
       </Components.SignInContainer>
       <Components.OverlayContainer signingIn={signIn}>
