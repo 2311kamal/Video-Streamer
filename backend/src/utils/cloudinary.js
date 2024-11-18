@@ -8,20 +8,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET, // Click 'View Credentials' below to copy your API secret
 });
 
-const uploadOnCloudinary = async (lacalFilePath) => {
+const uploadOnCloudinary = async (localFilePath, userId = "") => {
   try {
-    if (!lacalFilePath) return null;
-
-    // console.log("hello1");
-    const response = await cloudinary.uploader.upload(lacalFilePath, {
+    if (!localFilePath || !userId) {
+      return null;
+    }
+    
+    console.log("Uploading file to cloudinary");
+    console.log("LocalFile:", localFilePath);
+    console.log(userId);
+    const folderPath = `user-assets/${userId}`;
+    const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
+      folder: folderPath,
     });
-    // console.log("hello2");
-    // console.log("File uploaded on cloudinary/n", response.url);
-    fs.unlinkSync(lacalFilePath);
+
+    fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
-    fs.unlinkSync(lacalFilePath);
+    fs.unlinkSync(localFilePath);
+    throw error;
   }
 };
 
