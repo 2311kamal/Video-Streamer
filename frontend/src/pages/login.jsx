@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from "react";
 import * as Components from "../styles/loginCss.jsx";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
 
 function Login() {
   const [signIn, toggle] = useState(true);
   const [type, setType] = useState("email");
-  const [data, setData] = useState({ userName: "", email: "", password: "" });
+  const [data, setData] = useState({
+    fullName: "",
+    userName: "",
+    email: "",
+    password: "",
+    avatar: null,
+  });
 
   const handleClick = () => {
     setType(type === "email" ? "text" : "email");
+  };
+
+  const handleFileChange = (e) => {
+    setData({ ...data, avatar: e.target.files[0] }); // Add the file to data
   };
 
   useEffect(() => {
@@ -17,28 +26,59 @@ function Login() {
   }, [data]);
 
   const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSignIn = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/users/login",
-        data
-      );
+      const res = await axios.post("http://localhost:4000/api/v1/users/login", {
+        email: data.email,
+        password: data.password,
+        userName: data.userName,
+      });
       console.log(res.data.message);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const handleSignUp = async () => {
+    const formData = new FormData();
+    formData.append("fullName", data.fullName);
+    formData.append("userName", data.userName);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
 
+    // Append the file
+    if (data.avatar) {
+      formData.append("avatar", data.avatar); // 'avatar' must match your backend field
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/register",
+        formData
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Components.Container>
       <Components.SignUpContainer signingIn={signIn}>
         <Components.Form>
           <Components.Title>Create Account</Components.Title>
+          <Components.Input
+            onChange={handleChange}
+            type="text"
+            placeholder="Full Name"
+            name="fullName"
+          />
           <Components.Input
             onChange={handleChange}
             type="text"
@@ -57,6 +97,14 @@ function Login() {
             placeholder="Password"
             name="password"
           />
+
+          <Components.Input
+            type="file"
+            onChange={handleFileChange}
+            accept="image/*"
+            name="avatar"
+          />
+
           <Components.Button type="button" onClick={handleSignUp}>
             Sign Up
           </Components.Button>
