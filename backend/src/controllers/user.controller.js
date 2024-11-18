@@ -50,7 +50,7 @@ const registerUser = asyncHandler(async (req, res) => {
     $or: [{ userName }, { email }],
   });
   if (exisitinguser) {
-    throw new apiError(409, "User already exist");
+    throw new apiError(409, "Username/email already exist");
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
@@ -130,7 +130,7 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     // secure: true,
   };
-    
+
   return res
     .status(200)
     .cookie("accessToken", accessToken, options)
