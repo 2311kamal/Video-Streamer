@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import * as Components from "../styles/loginCss.jsx";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [signIn, toggle] = useState(true);
-  const [type, setType] = useState("email");
+  const [type, setType] = useState("username");
   const [data, setData] = useState({
     fullName: "",
     userName: "",
@@ -13,8 +14,24 @@ function Login() {
     avatar: null,
   });
 
+  const navigate = useNavigate();
+
   const handleClick = () => {
-    setType(type === "email" ? "text" : "email");
+    if (type === "username") {
+      setData({
+        ...data,
+        email: data.userName,
+        userName: "",
+      });
+    } else {
+      setData({
+        ...data,
+        userName: data.email,
+        email: "",
+      });
+    }
+
+    setType(type === "email" ? "username" : "email");
   };
 
   const handleFileChange = (e) => {
@@ -39,7 +56,10 @@ function Login() {
         password: data.password,
         userName: data.userName,
       });
-      console.log(res.data.message);
+      if (res.status === 200) {
+        navigate("/");
+      }
+      console.log(res.status === 200);
     } catch (err) {
       console.log(err);
     }
@@ -62,7 +82,10 @@ function Login() {
         "http://localhost:4000/api/v1/users/register",
         formData
       );
-      console.log(res.data);
+      if (res.status === 201) {
+        navigate("/");
+      }
+      console.log(res.status===201);
     } catch (err) {
       console.log(err);
     }
@@ -116,8 +139,8 @@ function Login() {
           <Components.Input
             onChange={handleChange}
             type={type}
-            placeholder={type === "text" ? "Username" : "Email"}
-            name={type === "text" ? "userName" : "email"}
+            placeholder={type === "username" ? "Username" : "Email"}
+            name={type === "username" ? "userName" : "email"}
           />
           <Components.Button type="button" onClick={handleClick}>
             {type !== "email" ? "Use Email" : "Use Username"}
