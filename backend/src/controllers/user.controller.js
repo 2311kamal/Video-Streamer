@@ -69,7 +69,12 @@ const registerUser = asyncHandler(async (req, res) => {
     coverImageLocalPath = req.files.coverImage[0].path;
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath, userName);
+  const avatar = await uploadOnCloudinary(
+    avatarLocalPath,
+    userName,
+    "/avatar",
+    fullName
+  );
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
   if (!avatar) {
     throw new apiError(409, "Avatar is required 111");
@@ -105,6 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //send cookie
 
   const { email, userName, password } = req.body;
+  console.log(req.body);
   if (!userName && !email) {
     throw new apiError(400, "username/email is required");
   }
