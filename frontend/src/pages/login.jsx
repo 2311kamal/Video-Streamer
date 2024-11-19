@@ -51,11 +51,15 @@ function Login() {
 
   const handleSignIn = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/api/v1/users/login", {
-        email: data.email,
-        password: data.password,
-        userName: data.userName,
-      });
+      const res = await axios.post(
+        "http://localhost:4000/api/v1/users/login",
+        {
+          email: data.email,
+          password: data.password,
+          userName: data.userName,
+        },
+        { withCredentials: true }
+      );
       if (res.status === 200) {
         navigate("/");
       }
@@ -85,7 +89,7 @@ function Login() {
       if (res.status === 201) {
         navigate("/");
       }
-      console.log(res.status===201);
+      console.log(res.status === 201);
     } catch (err) {
       console.log(err);
     }
