@@ -230,9 +230,13 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select(
+    "-password -refreshToken"
+  );
+
   return res
     .status(200)
-    .json(new apiResponse(200, req.user, "User fetched succfully"));
+    .json(new apiResponse(200, user, "User fetched succfully"));
 });
 
 const updateAccountDetail = asyncHandler(async (req, res) => {
