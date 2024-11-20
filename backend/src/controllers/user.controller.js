@@ -426,6 +426,33 @@ const getWathHistory = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, user[0].watchHistory, "watchHistory fetched"));
 });
 
+
+
+
+
+
+// New lightweight endpoint - auth.controller.js
+const checkToken = asyncHandler(async (req, res) => {
+  // Just verify JWT, no DB call
+  const token = req.cookies?.accessToken;
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: "No token"
+    });
+  }
+  
+  try {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    return res.status(200).json({ success: true });
+  } catch {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid token"
+    });
+  }
+});
+
 export {
   registerUser,
   loginUser,
@@ -438,4 +465,5 @@ export {
   updateUsercoverImage,
   getUserChannelProfile,
   getWathHistory,
+  checkToken
 };

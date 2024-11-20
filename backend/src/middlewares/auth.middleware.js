@@ -11,7 +11,12 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
       req.header("authorization")?.replace("Bearer ", "");
     console.log(accessToken);
     if (!accessToken) {
-      throw new apiError(401, "Unauthorized request");
+      // throw new apiError(401, "Unauthorized request");
+      console.log("No access token");
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized request",
+      });
     }
 
     const decodedToken = jwt.verify(
@@ -38,6 +43,11 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    throw new apiError(401, error?.message || "Invalid access token");
+    // throw new apiError(401, error?.message || "Invalid access token");
+    console.log("Invalid access token");
+    return res.status(401).json({
+      success: false,
+      message: error?.message || "Invalid access token",
+    });
   }
 });

@@ -11,6 +11,7 @@ import {
   updateUsercoverImage,
   getWathHistory,
   getUserChannelProfile,
+  checkToken,
 } from "../controllers/user.controller.js";
 
 import { upload } from "../middlewares/multer.middleware.js";
@@ -35,6 +36,7 @@ userRouter.route("/login").post(loginUser);
 
 //Secured Routes
 userRouter.route("/logout").post(verifyJWT, logoutUser);
+userRouter.route("/checkToken").post(checkToken);
 userRouter.route("/refresh-token").post(refrehAccessToken);
 userRouter.route("/change-pass").post(verifyJWT, changePassword);
 userRouter.route("/cur-user").get(verifyJWT, getCurrentUser);
