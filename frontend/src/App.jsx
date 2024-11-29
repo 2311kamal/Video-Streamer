@@ -13,7 +13,7 @@ import Library from "./pages/library";
 import Login from "./pages/login";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { login, logout } from "./store/authSlice"; // Assuming you have an authSlice for actions
+import { login, logout } from "./store/authSlice";
 
 const api = axios.create({
   baseURL: "http://localhost:4000/api/v1/users",
@@ -21,16 +21,15 @@ const api = axios.create({
 });
 
 const App = () => {
-  const user = useSelector((state) => state.auth.user); // Access user from Redux store
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
   const navigateToLogin = () => {
     if (location.pathname !== "/login") {
-      console.log(location.pathname);
       navigate("/login", {
-        state: { from: location.pathname }, // Save attempted URL for redirection after login
+        state: { from: location.pathname },
         replace: true,
       });
     }
@@ -38,15 +37,12 @@ const App = () => {
 
   const checkAuth = async () => {
     try {
-      const response = await api.get("/checkToken");
+      const response = await api.get("/cur-user");
 
       if (response.data.success == 200) {
-        dispatch(login(response.data.data)); 
-        if (location.state?.from) {
-          navigate(location.state.from, { replace: true });
-        }
+        dispatch(login(response.data.data));
       } else {
-        dispatch(logout()); 
+        dispatch(logout());
         navigateToLogin();
       }
     } catch (error) {
@@ -54,16 +50,16 @@ const App = () => {
         "Auth Error:",
         error.response?.data?.message || error.message
       );
-      dispatch(logout()); // Dispatch logout on error
+      dispatch(logout());
       navigateToLogin();
     }
   };
 
   useEffect(() => {
     if (!user) {
-      checkAuth(); // Only check authentication if user is not already logged in
+      checkAuth();
     }
-  }, [user, dispatch, navigate, location]);
+  }, [user, dispatch, navigate]);
 
   return <Outlet />;
 };

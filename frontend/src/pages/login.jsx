@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import * as Components from "../styles/loginCss.jsx";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { login } from "../store/authSlice";
 function Login() {
-  const location=useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [signIn, toggle] = useState(true);
   const [type, setType] = useState("username");
   const [data, setData] = useState({
@@ -14,8 +17,6 @@ function Login() {
     password: "",
     avatar: null,
   });
-
-  const navigate = useNavigate();
 
   const handleClick = () => {
     if (type === "username") {
@@ -40,7 +41,6 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log(data);
   }, [data]);
 
   const handleChange = (e) => {
@@ -62,10 +62,9 @@ function Login() {
         { withCredentials: true }
       );
       if (res.status === 200) {
-        const path=location.state?.from || "/";
-        navigate(path);
+        dispatch(login(res.data.data.user));
+        navigate(location.state?.from || "/");
       }
-      console.log(res.status === 200);
     } catch (err) {
       console.log(err);
     }
@@ -91,7 +90,6 @@ function Login() {
       if (res.status === 201) {
         navigate("/login");
       }
-      console.log(res.status === 201);
     } catch (err) {
       console.log(err);
     }
