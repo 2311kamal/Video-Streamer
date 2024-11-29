@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as Components from "../styles/loginCss.jsx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Login() {
+  const location=useLocation();
   const [signIn, toggle] = useState(true);
   const [type, setType] = useState("username");
   const [data, setData] = useState({
@@ -61,7 +62,8 @@ function Login() {
         { withCredentials: true }
       );
       if (res.status === 200) {
-        navigate("/");
+        const path=location.state?.from || "/";
+        navigate(path);
       }
       console.log(res.status === 200);
     } catch (err) {
@@ -87,7 +89,7 @@ function Login() {
         formData
       );
       if (res.status === 201) {
-        navigate("/");
+        navigate("/login");
       }
       console.log(res.status === 201);
     } catch (err) {

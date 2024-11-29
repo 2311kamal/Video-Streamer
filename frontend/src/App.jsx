@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Outlet,
   Route,
@@ -12,51 +11,65 @@ import HomePage from "./pages/homePage";
 import Layout from "./components/layout";
 import Library from "./pages/library";
 import Login from "./pages/login";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "./store/authSlice"; // Assuming you have an authSlice for actions
 
 const api = axios.create({
   baseURL: "http://localhost:4000/api/v1/users",
-  withCredentials: true, // for cookies
+  withCredentials: true,
 });
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.auth.user); // Access user from Redux store
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await api.post("/checkToken");
-        if (response.data.success) {
-          setUser(response.data.data); // Store user data
-          setIsLoading(false);
-          // If user was trying to access a protected route, redirect there
-          if (location.state?.from) {
-            navigate(location.state.from);
-          }
+  const navigateToLogin = () => {
+    if (location.pathname !== "/login") {
+      console.log(location.pathname);
+      navigate("/login", {
+        state: { from: location.pathname }, // Save attempted URL for redirection after login
+        replace: true,
+      });
+    }
+  };
+
+  const checkAuth = async () => {
+    try {
+      const response = await api.get("/checkToken");
+
+      if (response.data.success == 200) {
+        dispatch(login(response.data.data)); 
+        if (location.state?.from) {
+          navigate(location.state.from, { replace: true });
         }
-      } catch (error) {
-        console.log("Auth Error:", error.response?.data?.message || error.message);
-        if (location.pathname !== "/login") {
-          navigate("/login", {
-            state: { from: location.pathname }, // Save attempted URL
-            replace: true
-          });
-        }
-        setIsLoading(false);
+      } else {
+        dispatch(logout()); 
+        navigateToLogin();
       }
-    };
+    } catch (error) {
+      console.log(
+        "Auth Error:",
+        error.response?.data?.message || error.message
+      );
+      dispatch(logout()); // Dispatch logout on error
+      navigateToLogin();
+    }
+  };
 
-    checkAuth();
-  }, [navigate, location]);
+  useEffect(() => {
+    if (!user) {
+      checkAuth(); // Only check authentication if user is not already logged in
+    }
+  }, [user, dispatch, navigate, location]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return <Outlet />; 
+  return <Outlet />;
 };
+
+export default App;
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<App />}>
