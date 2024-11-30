@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
+import useAuthCheck from "../hooks/useAuthCheck";
 
 function Layout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -9,6 +10,8 @@ function Layout() {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
+  useAuthCheck();
 
   return (
     <div className="h-full flex flex-col">
