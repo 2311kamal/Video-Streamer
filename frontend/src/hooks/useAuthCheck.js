@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../store/authSlice";
+import axios from "axios";
 
 function useAuthCheck() {
   const user = useSelector((state) => state.auth.user);
@@ -17,6 +18,11 @@ function useAuthCheck() {
       });
     }
   };
+
+  const api = axios.create({
+    baseURL: "http://localhost:4000/api/v1/users",
+    withCredentials: true,
+  });
 
   const checkAuth = async () => {
     try {
@@ -37,8 +43,9 @@ function useAuthCheck() {
       navigateToLogin();
     }
   };
-
+//   console.log("Inside useAuthCheck\n");
   useEffect(() => {
+    // console.log("Inside useEffect\n");
     if (!user) {
       checkAuth();
     }
