@@ -165,6 +165,8 @@ const logoutUser = asyncHandler(async (req, res) => {
   );
   const options = {
     httpOnly: true,
+    sameSite: "lax",
+
     // secure: true, // ;uncomment this if using https (during production), localhost runs on http
   };
   return res

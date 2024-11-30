@@ -6,22 +6,26 @@ import {
   FiBookmark,
   FiSettings,
   FiStar,
+  FiLogOut,
 } from "react-icons/fi";
-import {  FaHistory, FaRegClock } from "react-icons/fa";
+import { FaHistory, FaRegClock, FaDoorOpen } from "react-icons/fa";
+import { apiCall } from "../utils/handleApiCall";
+import { logoutUser } from "../api/userApi";
 
 const Sidebar = ({ isOpen }) => {
+  const handleLogout = async () => {
+    const { response, error } = await apiCall(logoutUser);
+  };
+
   return (
     <div
-      className={`fixed top-[72px] left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300  ${
+      className={`fixed top-[72px] left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300  overflow-auto ${
         isOpen ? "w-48 " : "w-20"
       }`}
     >
-
-
       {/* Navigation Links */}
-      <nav className="flex flex-col items-start space-y-8 ml-4 ">
-        <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
-          
+      <nav className="flex flex-col items-start space-y-8 ml-4  ">
+        <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right ">
           {/* Home Link */}
           <Link
             to="/"
@@ -29,7 +33,9 @@ const Sidebar = ({ isOpen }) => {
           >
             <FiHome size={24} />
             {isOpen && (
-              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">Home</span>
+              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                Home
+              </span>
             )}
           </Link>
 
@@ -156,6 +162,24 @@ const Sidebar = ({ isOpen }) => {
               <span className="ml-4 transition-opacity duration-300">
                 Subscription 4
               </span>
+            </Link>
+          </div>
+        )}
+
+        {/* Logout Link */}
+        {isOpen && (
+          <div className="fixed bottom-0 left-0 bg-gray-900 animate-slide-left-to-right w-48">
+            <Link
+              onClick={handleLogout}
+              to="/login"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 pl-2 pb-2"
+            >
+              <FiLogOut size={32} />
+              {isOpen && (
+                <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                  Logout
+                </span>
+              )}
             </Link>
           </div>
         )}

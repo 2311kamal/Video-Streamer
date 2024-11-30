@@ -11,3 +11,6 @@ export const registerUser = (data) =>
 
     { headers: { "Content-Type": "multipart/form-data" } }
   );
+
+
+  export const logoutUser = () => apiClient.post("/users/logout");
