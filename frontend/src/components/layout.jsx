@@ -10,7 +10,6 @@ function Layout() {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-  // console.log("Indide Layout\n")
   useAuthCheck();
 
   return (

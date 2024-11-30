@@ -4,6 +4,9 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
+import { apiCall } from "../utils/handleApiCall.js";
+import { loginUser, registerUser } from "../api/userApi.js";
+
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -37,11 +40,8 @@ function Login() {
   };
 
   const handleFileChange = (e) => {
-    setData({ ...data, avatar: e.target.files[0] }); // Add the file to data
+    setData({ ...data, avatar: e.target.files[0] });
   };
-
-  useEffect(() => {
-  }, [data]);
 
   const handleChange = (e) => {
     setData({
@@ -51,22 +51,24 @@ function Login() {
   };
 
   const handleSignIn = async () => {
-    try {
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/users/login",
-        {
-          email: data.email,
-          password: data.password,
-          userName: data.userName,
-        },
-        { withCredentials: true }
-      );
-      if (res.status === 200) {
-        dispatch(login(res.data.data.user));
-        navigate(location.state?.from || "/");
-      }
-    } catch (err) {
-      console.log(err);
+    const { response, error } = await apiCall(
+      loginUser,
+      {
+        email: data.email,
+        password: data.password,
+        userName: data.userName,
+      },
+      { withCredentials: true }
+    );
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    if (response?.status === 200) {
+      dispatch(login(response.data.data.user));
+      navigate(location.state?.from || "/");
     }
   };
 
@@ -82,16 +84,16 @@ function Login() {
       formData.append("avatar", data.avatar); // 'avatar' must match your backend field
     }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/users/register",
-        formData
-      );
-      if (res.status === 201) {
-        navigate("/login");
-      }
-    } catch (err) {
-      console.log(err);
+    // console.log(data.avatar);
+
+    const { response, error } = await apiCall(registerUser, formData);
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+    if (response.status === 201) {
+      navigate("/login");
     }
   };
 

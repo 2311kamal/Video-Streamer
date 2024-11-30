@@ -4,7 +4,6 @@ function Thumbnail({ thumbnailUrl, title, channelName, views, className }) {
   return (
     <div className={`bg-gray-800 flex-shrink-0 w-[300px] md:w-[350px] rounded-lg flex flex-col shadow-lg  ${className}`}>
       <div className="hover:scale-[1.03] transition-transform duration-300 overflow-hidden rounded-t-lg mt-1">
-        {/* Aspect ratio control with 16:9 */}
         <img
           src={thumbnailUrl ? thumbnailUrl : "https://via.placeholder.com/150"}
           alt="thumbnail"
