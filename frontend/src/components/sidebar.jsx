@@ -29,13 +29,13 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={` bg-gray-900 text-gray-300 transition-all duration-300 flex-shrink-0  overflow-y-auto no-scrollbar ${
+      className={` bg-gray-900 text-gray-300 transition-all duration-300 flex-shrink-0 h-full overflow-y-auto no-scrollbar ${
         isOpen ? "w-48 " : "w-20"
       }`}
     >
       {/* Navigation Links */}
-      <nav className="flex flex-col items-start space-y-8 ml-4  ">
-        <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right ">
+      <nav className="flex flex-col items-start  h-full">
+        <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 ">
           {/* Home Link */}
           <Link
             to="/"
@@ -91,7 +91,7 @@ const Sidebar = ({ isOpen }) => {
 
         {/* You Section (Visible only when expanded) */}
         {isOpen && (
-          <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
+          <div className="mt-8 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 ">
             <div className="text-sm text-gray-500">You</div>
             <Link
               to="/history"
@@ -134,7 +134,7 @@ const Sidebar = ({ isOpen }) => {
 
         {/* Subscriptions Section (Visible only when expanded) */}
         {isOpen && (
-          <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right">
+          <div className="mt-8 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 ">
             <div className="text-sm text-gray-500">Subscriptions</div>
             {/* Example Subscriptions */}
             <Link
@@ -173,27 +173,66 @@ const Sidebar = ({ isOpen }) => {
                 Subscription 4
               </span>
             </Link>
+            <Link
+              to="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 5
+              </span>
+            </Link>
+            <Link
+              to="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 6
+              </span>
+            </Link>
+            <Link
+              to="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 7
+              </span>
+            </Link>
+            <Link
+              to="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 8
+              </span>
+            </Link>
           </div>
         )}
 
         {/* Logout Link */}
-        {isOpen && (
-          <div className="fixed bottom-0 left-0 bg-gray-900 animate-slide-left-to-right w-48">
-            <Link
-              onClick={handleLogout}
-              to="/login"
-              state={{ from: location.pathname }}
-              className="flex items-center text-gray-300 hover:text-white space-x-4 pl-2 pb-2"
-            >
-              <FiLogOut size={32} />
-              {isOpen && (
-                <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
-                  Logout
-                </span>
-              )}
-            </Link>
-          </div>
-        )}
+
+        <div
+          className={`animate-slide-left-to-right   bottom-0 bg-gray-700 transition-all duration-300 ${
+            isOpen ? "sticky w-48" : "fixed w-20"
+          }`}
+        >
+          <Link
+            onClick={handleLogout}
+            to="/login"
+            state={{ from: location.pathname }}
+            className="flex items-center text-gray-300 hover:text-white space-x-4 pl-4 my-4"
+          >
+            <FiLogOut size={32} />
+            {isOpen && (
+              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+                Logout
+              </span>
+            )}
+          </Link>
+        </div>
       </nav>
     </div>
   );
