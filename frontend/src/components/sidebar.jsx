@@ -19,7 +19,6 @@ const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    console.log(location);
     const { response, error } = await apiCall(logoutUser);
     if (response) {
       dispatch(logout());
@@ -182,10 +181,8 @@ const Sidebar = ({ isOpen }) => {
           <div className="fixed bottom-0 left-0 bg-gray-900 animate-slide-left-to-right w-48">
             <Link
               onClick={handleLogout}
-              to={{
-                pathname: "/login",
-                state: { from: location.pathname },
-              }}
+              to="/login"
+              state={{ from: location.pathname }}
               className="flex items-center text-gray-300 hover:text-white space-x-4 pl-2 pb-2"
             >
               <FiLogOut size={32} />
