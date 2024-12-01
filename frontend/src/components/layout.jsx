@@ -13,16 +13,16 @@ function Layout() {
   useAuthCheck();
 
   return (
-    <div className="h-full flex flex-col">
+    <div className=" flex flex-col">
       <Navbar toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={isSidebarOpen} />
-      <main
-        className={`flex-1 overflow-y-auto transition-all duration-300 ${
-          isSidebarOpen ? "ml-[192px]" : "ml-[80px]"
-        } mt-[72px] scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-mybg`}
-      >
-        <Outlet />
-      </main>
+      <div className="flex h-[calc(100vh-72px)]">
+        <Sidebar isOpen={isSidebarOpen} />
+        <main
+          className={`flex-grow overflow-y-auto transition-all duration-300  scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-mybg`}
+        >
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

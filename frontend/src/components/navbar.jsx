@@ -5,7 +5,7 @@ import { FaRegUserCircle, FaYoutube } from "react-icons/fa";
 
 const Navbar = ({ toggleSidebar }) => {
   return (
-    <div className="flex items-center justify-between bg-gray-900 text-white p-4 fixed w-full top-0 left-0 z-10">
+    <div className="flex items-center justify-between bg-gray-900 text-white p-4 ">
       <div className="flex justify-center items-center">
         <button onClick={toggleSidebar} className="text-2xl">
           <FiMenu />

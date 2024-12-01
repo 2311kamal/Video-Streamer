@@ -8,7 +8,7 @@ import {
   FiStar,
   FiLogOut,
 } from "react-icons/fi";
-import { FaHistory, FaRegClock, FaDoorOpen } from "react-icons/fa";
+import { FaHistory, FaRegClock } from "react-icons/fa";
 import { apiCall } from "../utils/handleApiCall";
 import { logoutUser } from "../api/userApi";
 import { useDispatch } from "react-redux";
@@ -19,7 +19,7 @@ const Sidebar = ({ isOpen }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    console.log("Inside handleLogout");
+    console.log(location);
     const { response, error } = await apiCall(logoutUser);
     if (response) {
       dispatch(logout());
@@ -30,7 +30,7 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={`fixed top-[72px] left-0 h-full bg-gray-900 text-gray-300 transition-all duration-300  overflow-auto ${
+      className={` bg-gray-900 text-gray-300 transition-all duration-300 flex-shrink-0  overflow-y-auto no-scrollbar ${
         isOpen ? "w-48 " : "w-20"
       }`}
     >
