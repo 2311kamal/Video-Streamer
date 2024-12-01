@@ -11,10 +11,21 @@ import {
 import { FaHistory, FaRegClock, FaDoorOpen } from "react-icons/fa";
 import { apiCall } from "../utils/handleApiCall";
 import { logoutUser } from "../api/userApi";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
+import { useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen }) => {
+  const location = useLocation();
+  const dispatch = useDispatch();
   const handleLogout = async () => {
+    console.log("Inside handleLogout");
     const { response, error } = await apiCall(logoutUser);
+    if (response) {
+      dispatch(logout());
+    } else {
+      console.log(error);
+    }
   };
 
   return (
@@ -171,7 +182,10 @@ const Sidebar = ({ isOpen }) => {
           <div className="fixed bottom-0 left-0 bg-gray-900 animate-slide-left-to-right w-48">
             <Link
               onClick={handleLogout}
-              to="/login"
+              to={{
+                pathname: "/login",
+                state: { from: location.pathname },
+              }}
               className="flex items-center text-gray-300 hover:text-white space-x-4 pl-2 pb-2"
             >
               <FiLogOut size={32} />

@@ -1,6 +1,5 @@
 export const apiCall = async (apiFunction, ...args) => {
   try {
-    console.log("Args:", ...args);
     const response = await apiFunction(...args);
     return { response: response, error: null };
   } catch (error) {
