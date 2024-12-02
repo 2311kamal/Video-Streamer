@@ -12,7 +12,7 @@ const generateAccRefToken = async (userId) => {
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshsToken();
     user.refreshToken = refreshToken;
-    user.accessToken = accessToken;
+    // user.accessToken = accessToken;
     await user.save({ validateBeforeSave: false });
     return { accessToken, refreshToken };
   } catch {
@@ -121,8 +121,8 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(404, "user dont exist");
   }
 
-  const isPasswordVali = await user.isPasswordCorrect(password);
-  if (!isPasswordVali) {
+  const isPasswordValid = await user.isPasswordCorrect(password);
+  if (!isPasswordValid) {
     throw new apiError(404, "Invalid Credentials");
   }
 
@@ -140,12 +140,18 @@ const loginUser = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, {
+      ...options,
+      maxAge: process.env.ACCESS_TOKEN_EXPIRY_INT * 60 * 1000,
+    })
+    .cookie("refreshToken", refreshToken, {
+      ...options,
+      maxAge: process.env.REFRESH_TOKEN_EXPIRY_INT * 24 * 60 * 60 * 1000,
+    })
     .json(
       new apiResponse(
         200,
-        { user: user, accessToken, refreshToken },
+        { user: loggedInUser, accessToken, refreshToken },
         "User logged In Successfully"
       )
     ); //loggedInUser
@@ -197,6 +203,7 @@ const refrehAccessToken = asyncHandler(async (req, res) => {
     const options = {
       httpOnly: true,
       // secure: true,
+      sameSite:"lax"
     };
     const { accessToken, refreshToken: newRefreshToken } =
       await generateAccRefToken(user._id);
@@ -428,12 +435,9 @@ const getWathHistory = asyncHandler(async (req, res) => {
     .json(new apiResponse(200, user[0].watchHistory, "watchHistory fetched"));
 });
 
-
 const checkToken = asyncHandler(async (req, res) => {
-const user= req.user;
-  return res
-    .status(200)
-    .json(new apiResponse(200, user, "Token is valid"));
+  const user = req.user;
+  return res.status(200).json(new apiResponse(200, user, "Token is valid"));
 });
 
 export {
@@ -449,4 +453,5 @@ export {
   getUserChannelProfile,
   getWathHistory,
   checkToken,
+  generateAccRefToken,
 };
