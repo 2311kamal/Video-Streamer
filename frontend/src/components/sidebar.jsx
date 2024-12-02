@@ -134,7 +134,7 @@ const Sidebar = ({ isOpen }) => {
 
         {/* Subscriptions Section (Visible only when expanded) */}
         {isOpen && (
-          <div className="mt-8 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 ">
+          <div className="mt-8 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 mb-2 ">
             <div className="text-sm text-gray-500">Subscriptions</div>
             {/* Example Subscriptions */}
             <Link

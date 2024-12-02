@@ -6,6 +6,7 @@ import { apiCall } from "../utils/handleApiCall";
 import { getCurUser } from "../api/userApi";
 
 function useAuthCheck() {
+  // console.log("Auth Check Hook");
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ function useAuthCheck() {
   };
 
   const checkAuth = async () => {
-    const { response, error } =  await apiCall(getCurUser);
+    const { response, error } = await apiCall(getCurUser);
+    // console.log("Auth Response:", response);
     if (error) {
       console.log("Auth Error:", error);
       dispatch(logout());
@@ -30,12 +32,17 @@ function useAuthCheck() {
     }
     if (response.data.success == 200) {
       dispatch(login(response.data.data));
+      // console.log("User Authenticated");
+      if (location.pathname === "/login") {
+        navigate("/", { replace: true });
+      }
     } else {
       dispatch(logout());
       navigateToLogin();
     }
   };
   useEffect(() => {
+    // console.log("Checking Auth");
     if (!user) {
       checkAuth();
     }

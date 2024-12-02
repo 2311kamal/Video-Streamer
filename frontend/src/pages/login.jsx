@@ -5,8 +5,10 @@ import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import { apiCall } from "../utils/handleApiCall.js";
 import { loginUser, registerUser } from "../api/userApi.js";
+import useAuthCheck from "../hooks/useAuthCheck.js";
 
 function Login() {
+  useAuthCheck();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
