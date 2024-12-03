@@ -1,5 +1,5 @@
 import React from "react";
-import Thumbnail from "../components/Thumbnail"; // Assuming this is the component for the thumbnails
+import Thumbnail from "../components/video/Thumbnail"; // Assuming this is the component for the thumbnails
 
 function HomePage({ card = <Thumbnail /> }) {
   return (

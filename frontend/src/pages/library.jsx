@@ -1,7 +1,7 @@
 import React from "react";
-import UserCard from "../components/userCard";
-import VideoSlide from "../components/videoSlide";
-import PlaylistCard from "../components/playlistcard";
+import UserCard from "../components/user/userCard";
+import VideoSlide from "../components/video/videoSlide";
+import PlaylistCard from "../components/video/playlistcard";
 
 function Library() {
   return (

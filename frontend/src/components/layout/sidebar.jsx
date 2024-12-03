@@ -9,10 +9,10 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { FaHistory, FaRegClock } from "react-icons/fa";
-import { apiCall } from "../utils/handleApiCall";
-import { logoutUser } from "../api/userApi";
+import { apiCall } from "../../utils/handleApiCall";
+import { logoutUser } from "../../api/userApi";
 import { useDispatch } from "react-redux";
-import { logout } from "../store/authSlice";
+import { logout } from "../../store/authSlice";
 import { useLocation } from "react-router-dom";
 
 const Sidebar = ({ isOpen }) => {
@@ -103,7 +103,7 @@ const Sidebar = ({ isOpen }) => {
               </span>
             </Link>
             <Link
-              to="/your-videos"
+              to="/myVideos"
               className="flex items-center text-gray-300 hover:text-white space-x-4"
             >
               <FaRegClock size={24} />

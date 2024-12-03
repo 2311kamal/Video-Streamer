@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import { Outlet } from "react-router-dom";
-import useAuthCheck from "../hooks/useAuthCheck";
+import useAuthCheck from "../../hooks/useAuthCheck";
 
 function Layout() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);

@@ -5,7 +5,7 @@ import {
   
   } from "react-router-dom";
   import HomePage from "../pages/homePage";
-  import Layout from "../components/layout";
+  import Layout from "../components/layout/layout";
   import Library from "../pages/library";
   import Login from "../pages/login";
   
