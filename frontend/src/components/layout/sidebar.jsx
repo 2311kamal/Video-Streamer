@@ -29,12 +29,12 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <div
-      className={` bg-gray-900 text-gray-300 transition-all duration-300 flex-shrink-0 h-full overflow-y-auto no-scrollbar ${
+      className={` bg-gray-900 text-gray-300 transition-all duration-300 flex-shrink-0 h-full ${
         isOpen ? "w-48 " : "w-20"
       }`}
     >
       {/* Navigation Links */}
-      <nav className="flex flex-col items-start  h-full">
+      <nav className="flex flex-col items-start  h-[calc(100vh-136px)]  overflow-y-auto no-scrollbar">
         <div className="mt-6 space-y-6 whitespace-nowrap animate-slide-left-to-right  ml-4 ">
           {/* Home Link */}
           <Link
@@ -209,31 +209,40 @@ const Sidebar = ({ isOpen }) => {
                 Subscription 8
               </span>
             </Link>
+            <Link
+              to="/subscription-4"
+              className="flex items-center text-gray-300 hover:text-white space-x-4 animate-slide-left-to-right"
+            >
+              <FiStar size={24} />
+              <span className="ml-4 transition-opacity duration-300">
+                Subscription 9
+              </span>
+            </Link>
           </div>
         )}
-
-        {/* Logout Link */}
-
-        <div
-          className={`animate-slide-left-to-right   bottom-0 bg-gray-700 transition-all duration-300 ${
-            isOpen ? "sticky w-48" : "fixed w-20"
-          }`}
-        >
-          <Link
-            onClick={handleLogout}
-            to="/login"
-            state={{ from: location.pathname }}
-            className="flex items-center text-gray-300 hover:text-white space-x-4 pl-4 my-4"
-          >
-            <FiLogOut size={32} />
-            {isOpen && (
-              <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
-                Logout
-              </span>
-            )}
-          </Link>
-        </div>
       </nav>
+
+      {/* Logout Link */}
+
+      <div
+        className={`animate-slide-left-to-right   bg-gray-700 transition-all duration-300 h-[64px] flex ${
+          isOpen ? " w-48" : " w-20"
+        }`}
+      >
+        <Link
+          onClick={handleLogout}
+          to="/login"
+          state={{ from: location.pathname }}
+          className="flex items-center text-gray-300 hover:text-white space-x-4 pl-4 "
+        >
+          <FiLogOut size={32} />
+          {isOpen && (
+            <span className="ml-4 transition-opacity duration-300 animate-slide-left-to-right">
+              Logout
+            </span>
+          )}
+        </Link>
+      </div>
     </div>
   );
 };
